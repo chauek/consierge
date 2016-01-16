@@ -2,6 +2,7 @@ scalariformSettings
 
 lazy val akkaV = "2.3.14"
 lazy val akkaStreamsV = "1.0"
+lazy val http4sVersion = "0.12.0"
 
 lazy val root = (project in file("."))
   .settings(
@@ -16,6 +17,8 @@ lazy val root = (project in file("."))
       "com.typesafe.akka" %% "akka-http-experimental" % akkaStreamsV,
       "com.typesafe.play" %% "play-json" % "2.4.3",
       "com.typesafe.scala-logging" %% "scala-logging"   % "3.1.0",
+      "org.http4s" %% "http4s-dsl" % http4sVersion,
+      "org.http4s" %% "http4s-blaze-server" % http4sVersion,
       "ch.qos.logback" % "logback-classic" % "1.1.2",
       "joda-time" % "joda-time" % "2.9.1"
     ) ++ Seq(
