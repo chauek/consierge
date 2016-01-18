@@ -1,12 +1,5 @@
 package ensime.consierge
 
-import akka.actor.ActorSystem
-import akka.actor.Cancellable
-import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.{ ContentTypes, HttpEntity, HttpMethods, HttpRequest, HttpResponse, Uri }
-import akka.stream.Materializer
-import akka.stream.scaladsl.{ Flow, Sink, Source }
-import akka.util.ByteString
 import com.typesafe.scalalogging.StrictLogging
 import org.joda.time.DateTime
 import play.api.libs.json._
@@ -72,4 +65,13 @@ object CommentResponse {
     (JsPath \ "url").read[String] and
     (JsPath \ "created_at").read[String].map(DateTime.parse)
   )(CommentResponse.apply _)
+}
+
+case class IssueCreatedInfo(action: String, issue: Issue)
+
+object IssueCreatedInfo {
+  implicit val reads: Reads[IssueCreatedInfo] = (
+    (__ \ "action").read[String] ~
+    (__ \ "issue").read[Issue]
+  )(IssueCreatedInfo.apply _)
 }

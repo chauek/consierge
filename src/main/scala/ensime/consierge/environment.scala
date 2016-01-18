@@ -1,13 +1,5 @@
 package ensime.consierge
 
-import akka.actor.{ ActorSystem, Cancellable }
-import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.HttpHeader
-import akka.http.scaladsl.model.headers.Authorization
-import akka.http.scaladsl.model.headers.GenericHttpCredentials
-import akka.http.scaladsl.model.{ HttpRequest, HttpResponse }
-import akka.stream.Materializer
-import akka.stream.scaladsl.Flow
 import com.typesafe.scalalogging.StrictLogging
 import scala.concurrent.duration._
 import scala.util.Try
@@ -64,18 +56,10 @@ trait Transport extends StrictLogging {
   this: Environment =>
 
   val Host = "api.github.com"
-  val DownloadTimeout = 500.millis
-  val DownloadParallelism = 20
+  val DownloadTimeout = 1.second
 
-  private lazy val authHeaders: Iterable[HttpHeader] =
-    List(Authorization(GenericHttpCredentials("token", config.credentials.accessToken)))
+//  private lazy val authHeaders: Iterable[HttpHeader] =
+//    List(Authorization(GenericHttpCredentials("token", config.credentials.accessToken)))
 
-  def pool[T](implicit mat: Materializer, as: ActorSystem): Flow[(HttpRequest, T), (Try[HttpResponse], T), Unit] =
-    Flow[(HttpRequest, T)]
-      .map { req =>
-        val authReq = (req._1.withHeaders(req._1.headers ++ authHeaders), req._2)
-        logger.debug(s"Sending request: $authReq")
-        authReq
-      }
-      .via(Http().superPool[T]())
+
 }
