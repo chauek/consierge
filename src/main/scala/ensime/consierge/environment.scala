@@ -55,11 +55,11 @@ trait Environment {
 trait Transport extends StrictLogging {
   this: Environment =>
 
+  val Protocol = "https://"
   val Host = "api.github.com"
-  val DownloadTimeout = 1.second
+  val DownloadTimeout = 10.second
 
-//  private lazy val authHeaders: Iterable[HttpHeader] =
-//    List(Authorization(GenericHttpCredentials("token", config.credentials.accessToken)))
-
+  //  private lazy val authHeaders: Iterable[HttpHeader] =
+  //    List(Authorization(GenericHttpCredentials("token", config.credentials.accessToken)))
 
 }
