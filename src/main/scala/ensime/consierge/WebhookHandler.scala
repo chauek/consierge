@@ -11,7 +11,7 @@ import org.http4s.dsl._
 /**
  * Created by dani on 16/01/2016.
  */
-class WebhookHandler extends Transport with Environment with Contributor {
+class WebhookHandler extends Transport with Environment with Contributor with Comments {
 
   val client = org.http4s.client.blaze.defaultClient
 
@@ -26,14 +26,8 @@ class WebhookHandler extends Transport with Environment with Contributor {
     }
   }
 
-  def commentsUri(issueNumber: Int) =
-    Uri.fromString(Protocol + Host + s"/repos/${config.owner}/${config.repo}/issues/${issueNumber}/comments").getOrElse(uri(""))
-
   def postIssueCommentUri(issueNumber: Int) =
     Uri.fromString(Protocol + Host + s"/repos/${config.owner}/${config.repo}/issues/${issueNumber}/comments").getOrElse(uri(""))
-
-  def issueCommentsTask(issueNumber: Int): Task[Seq[IssueComment]] = client.getAs[String](commentsUri(issueNumber))
-    .map(Json.parse(_).as[Seq[IssueComment]])
 
   def postCommentTask(issueNumber: Int): Task[CommentResponse] = {
     val request = POST(postIssueCommentUri(issueNumber), Json.stringify(Json.obj("body" -> config.message)))
