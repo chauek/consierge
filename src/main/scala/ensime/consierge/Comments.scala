@@ -9,7 +9,9 @@ import scalaz.concurrent.Task
 /**
  * Created by chauek on 13/02/16.
  */
-trait Comments extends Transport with Environment with HttpClient {
+trait Comments extends Transport with Environment {
+
+  def getHttpResponse(uri: Uri): Task[String]
 
   def commentsUri(issueNumber: Int) =
     Uri.fromString(Protocol + Host + s"/repos/${config.owner}/${config.repo}/issues/${issueNumber}/comments").getOrElse(uri(""))

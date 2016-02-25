@@ -30,19 +30,28 @@ object User {
       (__ \ "login").read[String])(User.apply _)
 }
 
-case class Issue(id: Int, number: Int, user: User, title: String, body: String, state: IssueState, createdAt: DateTime, updatedAt: DateTime)
+case class Issue(id: Int, number: Int, user: User) //, title: String, body: String, state: IssueState, createdAt: DateTime, updatedAt: DateTime)
 
 object Issue {
   implicit val reads: Reads[Issue] = (
     (__ \ "id").read[Int] ~
     (__ \ "number").read[Int] ~
-    (__ \ "user").read[User] ~
-    (__ \ "title").read[String] ~
-    (__ \ "body").read[String] ~
-    (__ \ "state").read[IssueState] ~
-    (__ \ "created_at").read[String].map(DateTime.parse) ~
-    (__ \ "updated_at").read[String].map(DateTime.parse)
+    (__ \ "user").read[User] // ~
+  //    (__ \ "title").read[String] ~
+  //    (__ \ "body").read[String] ~
+  //    (__ \ "state").read[IssueState] ~
+  //    (__ \ "created_at").read[String].map(DateTime.parse) ~
+  //    (__ \ "updated_at").read[String].map(DateTime.parse)
   )(Issue.apply _)
+}
+
+case class Repository(id: Int, full_name: String)
+
+object Repository {
+  implicit val reads: Reads[Repository] = (
+    (__ \ "id").read[Int] ~
+    (__ \ "full_name").read[String]
+  )(Repository.apply _)
 }
 
 case class IssueComment(id: Int, user: User)
@@ -67,11 +76,12 @@ object CommentResponse {
   )(CommentResponse.apply _)
 }
 
-case class IssueCreatedInfo(action: String, issue: Issue)
+case class IssueCreatedInfo(action: String, issue: Issue, repository: Repository)
 
 object IssueCreatedInfo {
   implicit val reads: Reads[IssueCreatedInfo] = (
     (__ \ "action").read[String] ~
-    (__ \ "issue").read[Issue]
+    (__ \ "issue").read[Issue] ~
+    (__ \ "repository").read[Repository]
   )(IssueCreatedInfo.apply _)
 }

@@ -11,6 +11,8 @@ import scalaz.concurrent.Task
  */
 trait Contributor extends Transport with Environment with HttpClient {
 
+  def getHttpResponse(uri: Uri): Task[String]
+
   def contributorsUri: Uri =
     Uri.fromString(Protocol + Host + s"/repos/${config.owner}/${config.repo}/contributors").getOrElse(uri(""))
 
