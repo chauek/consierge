@@ -4,23 +4,31 @@ import com.typesafe.scalalogging.StrictLogging
 import scala.concurrent.duration._
 import scala.util.Try
 
+case class ServerConf(
+  port: Int,
+  root: String,
+  githubWebhooksPath: String)
+
 case class Credentials(
   username: String,
-  accessToken: String
-)
+  accessToken: String)
 
 case class Configuration(
+  server: ServerConf,
   owner: String,
   repo: String,
   message: String,
   credentials: Credentials,
   pollInterval: FiniteDuration,
-  timeout: FiniteDuration
-)
+  timeout: FiniteDuration)
 
 object Configuration {
   def load: Configuration = {
     val config = com.typesafe.config.ConfigFactory.load()
+
+    def int(key: String): Int =
+      Option(config.getInt(key))
+        .getOrElse(sys.error(s"Config key not found: $key"))
 
     def string(key: String): String =
       Option(config.getString(key))
@@ -35,6 +43,11 @@ object Configuration {
       scala.io.Source.fromFile(string(key)).mkString
 
     Configuration(
+      server = ServerConf(
+        port = int("consierge.server.port"),
+        root = string("consierge.server.root"),
+        githubWebhooksPath = string("consierge.server.githubWebhooksPath")
+      ),
       owner = string("consierge.owner"),
       repo = string("consierge.repo"),
       message = file("consierge.messageFile"),
